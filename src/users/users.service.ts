@@ -1,45 +1,43 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-
-export type User = {
-  id: string;
-  username: string;
-  password: string;
-};
+import { Inject, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { Role } from '../auth/entities';
+import { UserDto } from './dto/user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  private readonly users: User[] = [
-    {
-      id: '1',
-      username: 'john',
-      password: 'changeme',
-    },
-    {
-      id: '2',
-      username: 'maria',
-      password: 'guess',
-    },
-  ];
-
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
-
-  findAll() {
-    return `This action returns all users`;
-  }
+  constructor(
+    @Inject('USER_REPOSITORY')
+    private userRepository: Repository<User>,
+  ) {}
 
   async findOne(username: string): Promise<User | undefined> {
-    return this.users.find((user) => user.username === username);
+    const user = await this.userRepository.findOne({
+      where: { username },
+      relations: { roles: true },
+    });
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async getProfile(username: string): Promise<UserDto | undefined> {
+    const user = await this.userRepository.findOne({ where: { username } });
+    if (!user) {
+      return undefined;
+    }
+    const userDto = new UserDto();
+    userDto.id = user.id;
+    userDto.username = user.username;
+    return userDto;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async create(username: string, password: string): Promise<User | undefined> {
+    const user = new User();
+    user.username = username;
+    user.password = password;
+    const role = new Role();
+    role.id = 1;
+    user.roles = [role];
+    await this.userRepository.save(user);
+    return user;
   }
 }
