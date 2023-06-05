@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { SocialInsurancesService } from './social-insurances.service';
+
 import { SocialInsurancesController } from './social-insurances.controller';
+import { SocialInsurancesService } from './social-insurances.service';
 
 @Module({
   controllers: [SocialInsurancesController],
-  providers: [SocialInsurancesService]
+  providers: [SocialInsurancesService],
 })
 export class SocialInsurancesModule {}

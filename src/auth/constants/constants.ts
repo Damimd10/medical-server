@@ -1,3 +1,3 @@
-export const jwtConstants: Record<string, string> = {
+export const jwtConstants = {
   secret: 'secretKey',
 };
