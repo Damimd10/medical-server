@@ -1,15 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+
 import { CreateSocialInsuranceDto } from './dto/create-social-insurance.dto';
 import { UpdateSocialInsuranceDto } from './dto/update-social-insurance.dto';
+import { SocialInsurance } from './entities/social-insurance.entity';
 
 @Injectable()
 export class SocialInsurancesService {
-  create(createSocialInsuranceDto: CreateSocialInsuranceDto) {
-    return 'This action adds a new socialInsurance';
+  constructor(
+    @Inject('SOCIAL_INSURANCE_REPOSITORY')
+    private socialInsuranceRepository: Repository<SocialInsurance>,
+  ) {}
+
+  async create(createSocialInsuranceDto: CreateSocialInsuranceDto) {
+    const socialInsurance = new SocialInsurance();
+
+    socialInsurance.name = createSocialInsuranceDto.name;
+
+    await this.socialInsuranceRepository.save(socialInsurance);
+
+    return socialInsurance;
   }
 
-  findAll() {
-    return `This action returns all socialInsurances`;
+  async findAll() {
+    const socialInsurances = await this.socialInsuranceRepository.find();
+
+    return socialInsurances;
   }
 
   findOne(id: number) {

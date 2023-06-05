@@ -1,1 +1,3 @@
-export class CreateSocialInsuranceDto {}
+export class CreateSocialInsuranceDto {
+  name: string;
+}
