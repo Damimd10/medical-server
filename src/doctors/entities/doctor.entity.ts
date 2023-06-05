@@ -3,37 +3,45 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Role } from '../../auth/entities';
 
-@Entity('users')
-export class User {
+import { Speciality } from 'src/specialities/entities/speciality.entity';
+import { User } from 'src/users/entities/user.entity';
+
+@Entity('doctors')
+export class Doctor {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  username: string;
+  name: string;
 
   @Column()
-  password: string;
+  surname: string;
 
-  @ManyToMany(() => Role)
+  @OneToOne(() => User)
+  @JoinColumn()
+  user_id: User;
+
+  @ManyToMany(() => Speciality, (speciality) => speciality.doctors)
   @JoinTable({
-    name: 'users_to_roles',
+    name: 'doctors_to_specialities',
     joinColumn: {
-      name: 'user_id',
+      name: 'doctor_id',
       referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: 'role_id',
+      name: 'speciality_id',
       referencedColumnName: 'id',
     },
   })
-  roles: Role[];
+  specialities: Speciality[];
 
   @CreateDateColumn()
   created_at: Date;

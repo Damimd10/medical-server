@@ -3,22 +3,23 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-import { ERole } from 'src/auth/role.enum';
+import { Doctor } from 'src/doctors/entities/doctor.entity';
 
-@Entity('roles')
-export class Role {
+@Entity('doctors')
+export class Speciality {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    type: 'enum',
-    enum: ERole,
-  })
+  @Column()
   name: string;
+
+  @ManyToMany(() => Doctor, (doctor) => doctor.specialities)
+  doctors: Doctor[];
 
   @CreateDateColumn()
   created_at: Date;
