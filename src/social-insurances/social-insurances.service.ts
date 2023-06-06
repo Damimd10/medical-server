@@ -12,31 +12,34 @@ export class SocialInsurancesService {
     private socialInsuranceRepository: Repository<SocialInsurance>,
   ) {}
 
-  async create(createSocialInsuranceDto: CreateSocialInsuranceDto) {
-    const socialInsurance = new SocialInsurance();
+  async create(
+    createSocialInsuranceDto: CreateSocialInsuranceDto,
+  ): Promise<SocialInsurance> {
+    const newSocialInsurance = await this.socialInsuranceRepository.create(
+      createSocialInsuranceDto,
+    );
 
-    socialInsurance.name = createSocialInsuranceDto.name;
-
-    await this.socialInsuranceRepository.save(socialInsurance);
-
-    return socialInsurance;
+    return this.socialInsuranceRepository.save(newSocialInsurance);
   }
 
-  async findAll() {
-    const socialInsurances = await this.socialInsuranceRepository.find();
-
-    return socialInsurances;
+  async findAll(): Promise<SocialInsurance[]> {
+    return this.socialInsuranceRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} socialInsurance`;
+  async findOne(id: number): Promise<SocialInsurance> {
+    return this.socialInsuranceRepository.findOne({ where: { id } });
   }
 
-  update(id: number, updateSocialInsuranceDto: UpdateSocialInsuranceDto) {
-    return `This action updates a #${id} socialInsurance`;
+  async update(
+    id: number,
+    updateSocialInsuranceDto: UpdateSocialInsuranceDto,
+  ): Promise<SocialInsurance> {
+    await this.socialInsuranceRepository.update(id, updateSocialInsuranceDto);
+
+    return this.socialInsuranceRepository.findOne({ where: { id } });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} socialInsurance`;
+  async remove(id: number): Promise<void> {
+    await this.socialInsuranceRepository.delete(id);
   }
 }

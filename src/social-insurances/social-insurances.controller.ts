@@ -3,14 +3,21 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+
+import { JwtAuthGuard } from 'src/auth/guards';
+
 import { CreateSocialInsuranceDto } from './dto/create-social-insurance.dto';
 import { UpdateSocialInsuranceDto } from './dto/update-social-insurance.dto';
+import { SocialInsurance } from './entities/social-insurance.entity';
 import { SocialInsurancesService } from './social-insurances.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('social-insurances')
 export class SocialInsurancesController {
   constructor(
@@ -18,30 +25,33 @@ export class SocialInsurancesController {
   ) {}
 
   @Post()
-  create(@Body() createSocialInsuranceDto: CreateSocialInsuranceDto) {
+  create(
+    @Body() createSocialInsuranceDto: CreateSocialInsuranceDto,
+  ): Promise<SocialInsurance> {
     return this.socialInsurancesService.create(createSocialInsuranceDto);
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<SocialInsurance[]> {
     return this.socialInsurancesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.socialInsurancesService.findOne(+id);
   }
 
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateSocialInsuranceDto: UpdateSocialInsuranceDto,
-  ) {
+  ): Promise<any> {
     return this.socialInsurancesService.update(+id, updateSocialInsuranceDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string): Promise<any> {
+    const socialInsurance = await this.socialInsurancesService.findOne(+id);
+
+    if (!socialInsurance) {
+      throw new NotFoundException('Social insurance not found');
+    }
+
     return this.socialInsurancesService.remove(+id);
   }
 }
