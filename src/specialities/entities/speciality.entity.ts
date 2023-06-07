@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Doctor } from 'src/doctors/entities/doctor.entity';
+import { Doctor } from '../../doctors/entities/doctor.entity';
 
 @Entity('doctors')
 export class Speciality {

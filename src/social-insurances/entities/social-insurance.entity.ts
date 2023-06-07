@@ -1,5 +1,6 @@
-import { Patient } from 'src/patients/entities/patient.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+import { Patient } from '../../patients/entities/patient.entity';
 
 @Entity('social_insurances')
 export class SocialInsurance {

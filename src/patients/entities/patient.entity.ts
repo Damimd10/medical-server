@@ -10,8 +10,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { SocialInsurance } from 'src/social-insurances/entities/social-insurance.entity';
-import { User } from 'src/users/entities/user.entity';
+import { SocialInsurance } from '../../social-insurances/entities/social-insurance.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity('patients')
 export class Patient {
