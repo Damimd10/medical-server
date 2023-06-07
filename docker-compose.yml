@@ -1,34 +1,25 @@
+version: '3.9'
 services:
-  api:
-    build:
-      dockerfile: Dockerfile
-      context: .
-      target: development
-    env_file:
-      - .env
-    volumes:
-      - .:/usr/src/app
-    command: npm run start:dev
-    networks:
-      - postgres
-    ports:
-      - 3000:3000
-    depends_on:
-      - postgres
-  postgres:
-    image: postgres:12-alpine
-    networks:
-      - postgres
+  db:
+    image: postgres
     restart: always
     environment:
-      POSTGRES_DB: ${DATABASE_NAME}
-      POSTGRES_USER: ${DATABASE_USER}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-    ports:
-      - '6543:5432'
+      - POSTGRES_DB=medical-app
+      - POSTGRES_PASSWORD=postgres
+    container_name: postgres
     volumes:
       - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '6432:5432'
 
-networks:
-  postgres:
-    driver: bridge
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    volumes:
+      - ./src:/app/src

@@ -1,4 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { SocialInsurance } from 'src/social-insurances/entities/social-insurance.entity';
@@ -11,7 +12,7 @@ import { Patient } from './entities/patient.entity';
 @Injectable()
 export class PatientsService {
   constructor(
-    @Inject('PATIENT_REPOSITORY')
+    @InjectRepository(Patient)
     private patientRepository: Repository<Patient>,
   ) {}
 

@@ -1,4 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { CreateSocialInsuranceDto } from './dto/create-social-insurance.dto';
@@ -8,7 +9,7 @@ import { SocialInsurance } from './entities/social-insurance.entity';
 @Injectable()
 export class SocialInsurancesService {
   constructor(
-    @Inject('SOCIAL_INSURANCE_REPOSITORY')
+    @InjectRepository(SocialInsurance)
     private socialInsuranceRepository: Repository<SocialInsurance>,
   ) {}
 

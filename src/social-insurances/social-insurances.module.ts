@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { DatabaseModule } from 'src/database/database.module';
-
+import { SocialInsurance } from './entities/social-insurance.entity';
 import { SocialInsurancesController } from './social-insurances.controller';
-import { socialInsuranceProviders } from './social-insurances.providers';
 import { SocialInsurancesService } from './social-insurances.service';
 
 @Module({
   controllers: [SocialInsurancesController],
-  imports: [DatabaseModule],
-  providers: [SocialInsurancesService, ...socialInsuranceProviders],
+  exports: [TypeOrmModule],
+  imports: [TypeOrmModule.forFeature([SocialInsurance])],
+  providers: [SocialInsurancesService],
 })
 export class SocialInsurancesModule {}
