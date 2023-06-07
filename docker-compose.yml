@@ -9,12 +9,16 @@ services:
     volumes:
       - .:/usr/src/app
     command: npm run start:dev
+    networks:
+      - postgres
     ports:
       - 3000:3000
     depends_on:
       - postgres
   postgres:
-    image: postgres
+    image: postgres:12-alpine
+    networks:
+      - postgres
     restart: always
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
@@ -23,7 +27,8 @@ services:
     ports:
       - '6543:5432'
     volumes:
-      - docker-nest-postgres:/var/lib/postgresql/data
+      - ./pgdata:/var/lib/postgresql/data
 
-volumes:
-  docker-nest-postgres:
+networks:
+  postgres:
+    driver: bridge
