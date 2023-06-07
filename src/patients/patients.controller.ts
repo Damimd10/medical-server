@@ -1,34 +1,71 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { PatientsService } from './patients.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+
+import { JwtAuthGuard } from 'src/auth/guards';
+import { User } from 'src/common/decorators';
+
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
+import { Patient } from './entities/patient.entity';
+import { PatientsService } from './patients.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('patients')
 export class PatientsController {
   constructor(private readonly patientsService: PatientsService) {}
 
   @Post()
-  create(@Body() createPatientDto: CreatePatientDto) {
-    return this.patientsService.create(createPatientDto);
+  async create(
+    @Body() createPatientDto: CreatePatientDto,
+    @User() user,
+  ): Promise<Patient> {
+    return this.patientsService.create({
+      ...createPatientDto,
+      created_by: user.id,
+    });
   }
 
   @Get()
-  findAll() {
+  async findAll(): Promise<Patient[]> {
     return this.patientsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.patientsService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<Patient> {
+    const patient = await this.patientsService.findOne(+id);
+
+    if (!patient) {
+      throw new NotFoundException('Patient not found');
+    }
+
+    return patient;
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePatientDto: UpdatePatientDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updatePatientDto: UpdatePatientDto,
+  ): Promise<Patient> {
     return this.patientsService.update(+id, updatePatientDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string): Promise<void> {
+    const patient = await this.patientsService.findOne(+id);
+
+    if (!patient) {
+      throw new NotFoundException('Patient not found');
+    }
+
     return this.patientsService.remove(+id);
   }
 }

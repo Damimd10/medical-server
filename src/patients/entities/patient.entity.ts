@@ -27,36 +27,37 @@ export class Patient {
   @Column()
   social_insurance_number: string;
 
-  @Column({ type: 'date' })
+  @Column({ nullable: true, type: 'date' })
   birth_date: string;
 
-  @Column()
+  @Column({ nullable: true })
   phone_number: string;
 
-  @Column()
+  @Column({ default: true })
   is_alive: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   country: string;
 
-  @Column()
+  @Column({ nullable: true })
   city: string;
 
-  @Column()
+  @Column({ nullable: true })
   street: string;
 
   @ManyToOne(
     () => SocialInsurance,
     (socialInsurance) => socialInsurance.patients,
   )
+  @JoinColumn({ name: 'social_insurance_id' })
   social_insurance: SocialInsurance;
 
   @OneToOne(() => User)
-  @JoinColumn()
-  created_by: User;
+  @JoinColumn({ name: 'created_by' })
+  user: User;
 
   @CreateDateColumn()
   created_at: Date;
