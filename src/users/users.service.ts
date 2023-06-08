@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Role } from '../auth/entities';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDto } from './dto/user.dto';
 import { User } from './entities/user.entity';
 
@@ -19,6 +21,15 @@ export class UsersService {
     });
 
     return users;
+  }
+
+  async findById(id: number): Promise<User | undefined> {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: { roles: true },
+    });
+
+    return user;
   }
 
   async findOne(username: string): Promise<User | undefined> {
@@ -44,11 +55,11 @@ export class UsersService {
     return userDto;
   }
 
-  async create(username: string, password: string): Promise<User | undefined> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const user = new User();
 
-    user.username = username;
-    user.password = password;
+    user.username = createUserDto.username;
+    user.password = createUserDto.password;
 
     const role = new Role();
     role.id = 1;
@@ -56,6 +67,14 @@ export class UsersService {
     user.roles = [role];
 
     await this.userRepository.save(user);
+
+    return user;
+  }
+
+  async update(id: number, data: UpdateUserDto): Promise<User> {
+    await this.userRepository.update(id, data);
+
+    const user = await this.userRepository.findOne({ where: { id } });
 
     return user;
   }

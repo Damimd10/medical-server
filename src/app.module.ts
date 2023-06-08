@@ -16,7 +16,9 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     AuthModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     DoctorsModule,
     PatientsModule,
     SocialInsurancesModule,

@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { JwtAuthGuard } from 'src/auth/guards';
+import { AccessTokenGuard } from 'src/auth/guards';
 import { User } from 'src/common/decorators';
 
 import { CreatePatientDto } from './dto/create-patient.dto';
@@ -18,7 +18,7 @@ import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient } from './entities/patient.entity';
 import { PatientsService } from './patients.service';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(AccessTokenGuard)
 @Controller('patients')
 export class PatientsController {
   constructor(private readonly patientsService: PatientsService) {}

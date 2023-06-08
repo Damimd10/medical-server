@@ -10,14 +10,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { JwtAuthGuard } from 'src/auth/guards';
+import { AccessTokenGuard } from 'src/auth/guards';
 
 import { CreateSocialInsuranceDto } from './dto/create-social-insurance.dto';
 import { UpdateSocialInsuranceDto } from './dto/update-social-insurance.dto';
 import { SocialInsurance } from './entities/social-insurance.entity';
 import { SocialInsurancesService } from './social-insurances.service';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(AccessTokenGuard)
 @Controller('social-insurances')
 export class SocialInsurancesController {
   constructor(
