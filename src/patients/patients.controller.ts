@@ -30,7 +30,7 @@ export class PatientsController {
   ): Promise<Patient> {
     return this.patientsService.create({
       ...createPatientDto,
-      created_by: user.id,
+      created_by: user.sub,
     });
   }
 

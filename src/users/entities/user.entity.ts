@@ -26,7 +26,7 @@ export class User {
 
   @ManyToMany(() => Role)
   @JoinTable({
-    name: 'users_to_roles',
+    name: 'users_roles',
     joinColumn: {
       name: 'user_id',
       referencedColumnName: 'id',

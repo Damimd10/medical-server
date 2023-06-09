@@ -1,26 +1,40 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
 import { CreateSpecialityDto } from './dto/create-speciality.dto';
 import { UpdateSpecialityDto } from './dto/update-speciality.dto';
+import { Speciality } from './entities/speciality.entity';
 
 @Injectable()
 export class SpecialitiesService {
-  create(createSpecialityDto: CreateSpecialityDto) {
-    return 'This action adds a new speciality';
+  constructor(
+    @InjectRepository(Speciality)
+    private specialityRepository: Repository<Speciality>,
+  ) {}
+
+  async create(createSpecialityDto: CreateSpecialityDto): Promise<Speciality> {
+    return this.specialityRepository.save(createSpecialityDto);
   }
 
-  findAll() {
-    return `This action returns all specialities`;
+  async findAll(): Promise<Speciality[]> {
+    return this.specialityRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} speciality`;
+  async findOne(id: number): Promise<Speciality> {
+    return this.specialityRepository.findOne({ where: { id } });
   }
 
-  update(id: number, updateSpecialityDto: UpdateSpecialityDto) {
-    return `This action updates a #${id} speciality`;
+  async update(
+    id: number,
+    updateSpecialityDto: UpdateSpecialityDto,
+  ): Promise<Speciality> {
+    await this.specialityRepository.update(id, updateSpecialityDto);
+
+    return this.specialityRepository.findOne({ where: { id } });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} speciality`;
+  async remove(id: number): Promise<void> {
+    await this.specialityRepository.delete(id);
   }
 }

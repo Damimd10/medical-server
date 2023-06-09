@@ -30,17 +30,7 @@ export class Doctor {
   user_id: User;
 
   @ManyToMany(() => Speciality, (speciality) => speciality.doctors)
-  @JoinTable({
-    name: 'doctors_to_specialities',
-    joinColumn: {
-      name: 'doctor_id',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'speciality_id',
-      referencedColumnName: 'id',
-    },
-  })
+  @JoinTable({ name: 'doctors_specialities' })
   specialities: Speciality[];
 
   @CreateDateColumn()

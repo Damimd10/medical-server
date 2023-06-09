@@ -28,25 +28,25 @@ export class Patient {
   social_insurance_number: string;
 
   @Column({ nullable: true, type: 'date' })
-  birth_date: string;
+  birth_date?: string;
 
   @Column({ nullable: true })
   phone_number: string;
 
   @Column({ default: true })
-  is_alive: boolean;
+  is_alive?: boolean;
 
   @Column({ nullable: true })
-  email: string;
+  email?: string;
 
   @Column({ nullable: true })
-  country: string;
+  country?: string;
 
   @Column({ nullable: true })
-  city: string;
+  city?: string;
 
   @Column({ nullable: true })
-  street: string;
+  street?: string;
 
   @ManyToOne(
     () => SocialInsurance,
