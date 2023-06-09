@@ -10,6 +10,7 @@ import {
 enum ERole {
   User = 'user',
   Admin = 'admin',
+  Doctor = 'doctor',
 }
 
 @Entity('roles')

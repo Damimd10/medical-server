@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { Speciality } from 'src/specialities/entities/speciality.entity';
 import { Role } from '../auth/entities';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -17,7 +18,7 @@ export class UsersService {
 
   async findAll(): Promise<User[]> {
     const users = await this.userRepository.find({
-      relations: { roles: true },
+      relations: { roles: true, specialities: true },
     });
 
     return users;
@@ -57,14 +58,24 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = new User();
+    const role = new Role();
+    const specialities = [];
 
     user.username = createUserDto.username;
     user.password = createUserDto.password;
+    user.name = createUserDto.name;
+    user.surname = createUserDto.surname;
 
-    const role = new Role();
     role.id = 1;
-
     user.roles = [role];
+
+    createUserDto.specialities.forEach((specialityId) => {
+      const currentSpeciality = new Speciality();
+      currentSpeciality.id = specialityId;
+      specialities.push(currentSpeciality);
+    });
+
+    user.specialities = specialities;
 
     await this.userRepository.save(user);
 
@@ -72,9 +83,23 @@ export class UsersService {
   }
 
   async update(id: number, data: UpdateUserDto): Promise<User> {
-    await this.userRepository.update(id, data);
+    const { specialities, ...userData } = data;
 
-    const user = await this.userRepository.findOne({ where: { id } });
+    const currentUser = await this.userRepository.findOne({ where: { id } });
+
+    const updatedSpecialities = specialities.map((specialityId) => {
+      const speciality = new Speciality();
+      speciality.id = specialityId;
+      return speciality;
+    });
+
+    await this.userRepository.save({
+      ...currentUser,
+      ...userData,
+      specialities: updatedSpecialities,
+    });
+
+    const user = this.userRepository.findOne({ where: { id } });
 
     return user;
   }

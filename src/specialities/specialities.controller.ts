@@ -7,12 +7,17 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+
+import { AccessTokenGuard } from 'src/auth/guards';
+
 import { CreateSpecialityDto } from './dto/create-speciality.dto';
 import { UpdateSpecialityDto } from './dto/update-speciality.dto';
 import { Speciality } from './entities/speciality.entity';
 import { SpecialitiesService } from './specialities.service';
 
+@UseGuards(AccessTokenGuard)
 @Controller('specialities')
 export class SpecialitiesController {
   constructor(private readonly specialitiesService: SpecialitiesService) {}

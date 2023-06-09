@@ -10,12 +10,19 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Role } from '../../auth/entities';
+import { Role } from 'src/auth/entities';
+import { Speciality } from 'src/specialities/entities/speciality.entity';
 
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ nullable: true })
+  name?: string;
+
+  @Column({ nullable: true })
+  surname?: string;
 
   @Column()
   username: string;
@@ -37,6 +44,20 @@ export class User {
     },
   })
   roles: Role[];
+
+  @ManyToMany(() => Speciality)
+  @JoinTable({
+    name: 'users_specialities',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'speciality_id',
+      referencedColumnName: 'id',
+    },
+  })
+  specialities: Speciality[];
 
   @Column({ nullable: true })
   refresh_token?: string;
