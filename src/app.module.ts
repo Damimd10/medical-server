@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
+import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -11,6 +9,7 @@ import { PatientsModule } from './patients/patients.module';
 import { SocialInsurancesModule } from './social-insurances/social-insurances.module';
 import { SpecialitiesModule } from './specialities/specialities.module';
 import { UsersModule } from './users/users.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -23,22 +22,7 @@ import { UsersModule } from './users/users.module';
     SpecialitiesModule,
     UsersModule,
     HealthModule,
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DATABASE_HOST'),
-        port: 5432,
-        username: configService.get('DATABASE_USER'),
-        password: configService.get('DATABASE_PASSWORD'),
-        database: configService.get('DATABASE_NAME'),
-        entities: [join(__dirname, '/**', '*.entity.{ts,js}')],
-        synchronize: true,
-        autoLoadEntities: true,
-        retryAttempts: 999,
-      }),
-      inject: [ConfigService],
-    }),
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

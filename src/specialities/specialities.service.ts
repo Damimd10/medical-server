@@ -1,40 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Speciality } from '@prisma/client';
 
-import { Repository } from 'typeorm';
+import { PrismaService } from 'src/prisma/prisma.service';
+
 import { CreateSpecialityDto } from './dto/create-speciality.dto';
 import { UpdateSpecialityDto } from './dto/update-speciality.dto';
-import { Speciality } from './entities/speciality.entity';
 
 @Injectable()
 export class SpecialitiesService {
-  constructor(
-    @InjectRepository(Speciality)
-    private specialityRepository: Repository<Speciality>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async create(createSpecialityDto: CreateSpecialityDto): Promise<Speciality> {
-    return this.specialityRepository.save(createSpecialityDto);
+    return this.prisma.speciality.create({ data: { ...createSpecialityDto } });
   }
 
   async findAll(): Promise<Speciality[]> {
-    return this.specialityRepository.find();
+    return this.prisma.speciality.findMany();
   }
 
   async findOne(id: number): Promise<Speciality> {
-    return this.specialityRepository.findOne({ where: { id } });
+    return this.prisma.speciality.findUnique({ where: { id } });
   }
 
   async update(
     id: number,
     updateSpecialityDto: UpdateSpecialityDto,
   ): Promise<Speciality> {
-    await this.specialityRepository.update(id, updateSpecialityDto);
+    await this.prisma.speciality.update({
+      where: { id },
+      data: { ...updateSpecialityDto },
+    });
 
-    return this.specialityRepository.findOne({ where: { id } });
+    return this.prisma.speciality.findUnique({ where: { id } });
   }
 
   async remove(id: number): Promise<void> {
-    await this.specialityRepository.delete(id);
+    await this.prisma.speciality.delete({ where: { id } });
   }
 }

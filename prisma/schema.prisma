@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int                     @id @default(autoincrement())
+  username     String                  @unique
+  password     String
+  name         String?
+  surname      String?
+  role         Role                    @default(USER)
+  refreshToken String?
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+  specialities SpecialitiesOnDoctors[]
+  patients     Patient[]
+}
+
+model Speciality {
+  id          Int                     @id @default(autoincrement())
+  name        String                  @unique
+  description String?
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  doctors     SpecialitiesOnDoctors[]
+}
+
+model SpecialitiesOnDoctors {
+  user         User       @relation(fields: [userId], references: [id])
+  userId       Int
+  speciality   Speciality @relation(fields: [specialityId], references: [id])
+  specialityId Int
+  assignedAt   DateTime   @default(now())
+
+  @@id([userId, specialityId])
+}
+
+model Patient {
+  id                    Int             @id @default(autoincrement())
+  name                  String
+  surname               String
+  socialInsuranceNumber String?
+  birthDate             String?
+  phoneNumber           String?
+  isAlive               Boolean         @default(true)
+  email                 String?
+  country               String?
+  city                  String?
+  street                String?
+  createdBy             User            @relation(fields: [createdById], references: [id])
+  createdById           Int
+  socialInsurance       SocialInsurance @relation(fields: [socialInsuranceId], references: [id])
+  socialInsuranceId     Int
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+}
+
+model SocialInsurance {
+  id      Int       @id @default(autoincrement())
+  name    String    @unique
+  patient Patient[]
+}
+
+enum Role {
+  ADMIN
+  DOCTOR
+  USER
+}

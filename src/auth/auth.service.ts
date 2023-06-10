@@ -56,19 +56,19 @@ export class AuthService {
   }
 
   async logout(userId: number) {
-    return this.usersService.update(userId, { refresh_token: null });
+    return this.usersService.update(userId, { refreshToken: null });
   }
 
   async refreshTokens(userId: number, refreshToken: string) {
     const user = await this.usersService.findById(userId);
 
-    if (!user || !user.refresh_token) {
+    if (!user || !user.refreshToken) {
       throw new ForbiddenException('Access Denied');
     }
 
     const refreshTokenMatches = await bcrypt.compare(
       refreshToken,
-      user.refresh_token,
+      user.refreshToken,
     );
 
     if (!refreshTokenMatches) {
@@ -124,7 +124,7 @@ export class AuthService {
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 0);
 
     await this.usersService.update(userId, {
-      refresh_token: hashedRefreshToken,
+      refreshToken: hashedRefreshToken,
     });
   }
 

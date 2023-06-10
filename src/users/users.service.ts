@@ -1,83 +1,62 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Role, User } from '@prisma/client';
 
-import { Speciality } from 'src/specialities/entities/speciality.entity';
-import { Role } from '../auth/entities';
+import { PrismaService } from 'src/prisma/prisma.service';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserDto } from './dto/user.dto';
-import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async findAll(): Promise<User[]> {
-    const users = await this.userRepository.find({
-      relations: { roles: true, specialities: true },
+    const users = await this.prisma.user.findMany({
+      include: {
+        specialities: {
+          include: { speciality: true },
+        },
+      },
     });
 
     return users;
   }
 
   async findById(id: number): Promise<User | undefined> {
-    const user = await this.userRepository.findOne({
+    const user = await this.prisma.user.findUnique({
       where: { id },
-      relations: { roles: true },
     });
 
     return user;
   }
 
   async findOne(username: string): Promise<User | undefined> {
-    const user = await this.userRepository.findOne({
+    const user = await this.prisma.user.findUnique({
       where: { username },
-      relations: { roles: true },
     });
+
     return user;
   }
 
-  async getProfile(username: string): Promise<UserDto | undefined> {
-    const user = await this.userRepository.findOne({ where: { username } });
-
-    if (!user) {
-      return undefined;
-    }
-
-    const userDto = new UserDto();
-
-    userDto.id = user.id;
-    userDto.username = user.username;
-
-    return userDto;
-  }
-
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const user = new User();
-    const role = new Role();
-    const specialities = [];
+    const { specialities, ...userData } = createUserDto;
 
-    user.username = createUserDto.username;
-    user.password = createUserDto.password;
-    user.name = createUserDto.name;
-    user.surname = createUserDto.surname;
-
-    role.id = 1;
-    user.roles = [role];
-
-    createUserDto.specialities.forEach((specialityId) => {
-      const currentSpeciality = new Speciality();
-      currentSpeciality.id = specialityId;
-      specialities.push(currentSpeciality);
+    const user = await this.prisma.user.create({
+      data: {
+        ...userData,
+        role: Role.DOCTOR,
+        specialities: {
+          create: specialities.map((specialityId) => ({
+            assignedAt: new Date(),
+            speciality: {
+              connect: {
+                id: specialityId,
+              },
+            },
+          })),
+        },
+      },
     });
-
-    user.specialities = specialities;
-
-    await this.userRepository.save(user);
 
     return user;
   }
@@ -85,22 +64,35 @@ export class UsersService {
   async update(id: number, data: UpdateUserDto): Promise<User> {
     const { specialities, ...userData } = data;
 
-    const currentUser = await this.userRepository.findOne({ where: { id } });
+    const specialitiesData = specialities
+      ? {
+          specialities: {
+            deleteMany: {
+              userId: id,
+            },
+            create: specialities.map((specialityId) => ({
+              assignedAt: new Date(),
+              speciality: {
+                connect: {
+                  id: specialityId,
+                },
+              },
+            })),
+          },
+        }
+      : null;
 
-    const updatedSpecialities = specialities.map((specialityId) => {
-      const speciality = new Speciality();
-      speciality.id = specialityId;
-      return speciality;
+    return this.prisma.user.update({
+      include: {
+        specialities: {
+          include: { speciality: true },
+        },
+      },
+      where: { id },
+      data: {
+        ...specialitiesData,
+        ...userData,
+      },
     });
-
-    await this.userRepository.save({
-      ...currentUser,
-      ...userData,
-      specialities: updatedSpecialities,
-    });
-
-    const user = this.userRepository.findOne({ where: { id } });
-
-    return user;
   }
 }

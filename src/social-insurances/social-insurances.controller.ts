@@ -9,12 +9,12 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { SocialInsurance } from '@prisma/client';
 
 import { AccessTokenGuard } from 'src/auth/guards';
 
 import { CreateSocialInsuranceDto } from './dto/create-social-insurance.dto';
 import { UpdateSocialInsuranceDto } from './dto/update-social-insurance.dto';
-import { SocialInsurance } from './entities/social-insurance.entity';
 import { SocialInsurancesService } from './social-insurances.service';
 
 @UseGuards(AccessTokenGuard)

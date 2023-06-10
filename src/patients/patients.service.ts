@@ -1,53 +1,46 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Patient } from '@prisma/client';
 
-import { SocialInsurance } from 'src/social-insurances/entities/social-insurance.entity';
-import { User } from 'src/users/entities/user.entity';
-
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
-import { Patient } from './entities/patient.entity';
 
 @Injectable()
 export class PatientsService {
-  constructor(
-    @InjectRepository(Patient)
-    private patientRepository: Repository<Patient>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async create(createPatientDto: CreatePatientDto): Promise<Patient> {
-    const patient = new Patient();
-    const socialInsurance = new SocialInsurance();
-    const user = new User();
+    const { socialInsuranceId, createdBy, ...patientData } = createPatientDto;
 
-    patient.name = createPatientDto.name;
-    patient.surname = createPatientDto.surname;
-    patient.social_insurance_number = createPatientDto.social_insurance_number;
-    patient.birth_date = createPatientDto.birth_date;
-    patient.phone_number = createPatientDto.phone_number;
-    patient.is_alive = createPatientDto.is_alive;
-    patient.email = createPatientDto.email;
-    patient.country = createPatientDto.country;
-    patient.city = createPatientDto.city;
-    patient.street = createPatientDto.street;
+    const patient = await this.prisma.patient.create({
+      data: {
+        ...patientData,
+        createdBy: {
+          connect: {
+            id: createdBy,
+          },
+        },
+        socialInsurance: {
+          connect: {
+            id: socialInsuranceId,
+          },
+        },
+      },
+      include: {
+        createdBy: true,
+        socialInsurance: true,
+      },
+    });
 
-    socialInsurance.id = createPatientDto.social_insurance_id;
-    user.id = createPatientDto.created_by;
-
-    patient.social_insurance = socialInsurance;
-    patient.user = user;
-
-    return this.patientRepository.save(patient);
+    return patient;
   }
 
   async findAll(): Promise<Patient[]> {
-    return this.patientRepository.find();
+    return this.prisma.patient.findMany();
   }
 
   async findOne(id: number): Promise<Patient> {
-    return this.patientRepository.findOne({
-      relations: { social_insurance: true, user: true },
+    return this.prisma.patient.findUnique({
       where: { id },
     });
   }
@@ -56,12 +49,17 @@ export class PatientsService {
     id: number,
     updatePatientDto: UpdatePatientDto,
   ): Promise<Patient> {
-    await this.patientRepository.update(id, updatePatientDto);
+    await this.prisma.patient.update({
+      where: {
+        id,
+      },
+      data: {} as any,
+    });
 
-    return this.patientRepository.findOne({ where: { id } });
+    return this.prisma.patient.findUnique({ where: { id } });
   }
 
   async remove(id: number): Promise<void> {
-    await this.patientRepository.softDelete(id);
+    await this.prisma.patient.delete({ where: { id } });
   }
 }
