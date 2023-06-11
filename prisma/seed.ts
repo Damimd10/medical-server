@@ -23,6 +23,16 @@ async function main() {
       { name: 'Hematología' },
     ],
   });
+
+  await prisma.socialInsurance.createMany({
+    data: [
+      { name: 'OSDE' },
+      { name: 'Swiss Medical' },
+      { name: 'Galeno' },
+      { name: 'Medicus' },
+      { name: 'Accord Salud' },
+    ],
+  });
 }
 
 main()
