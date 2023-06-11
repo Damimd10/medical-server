@@ -10,6 +10,7 @@ import { SocialInsurancesModule } from './social-insurances/social-insurances.mo
 import { SpecialitiesModule } from './specialities/specialities.module';
 import { UsersModule } from './users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { AppointmentsModule } from './appointments/appointments.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PrismaModule } from './prisma/prisma.module';
     UsersModule,
     HealthModule,
     PrismaModule,
+    AppointmentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

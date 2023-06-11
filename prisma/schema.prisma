@@ -22,6 +22,7 @@ model User {
   updatedAt    DateTime                @updatedAt
   specialities SpecialitiesOnDoctors[]
   patients     Patient[]
+  appointment  Appointment[]
 }
 
 model Speciality {
@@ -31,6 +32,7 @@ model Speciality {
   createdAt   DateTime                @default(now())
   updatedAt   DateTime                @updatedAt
   doctors     SpecialitiesOnDoctors[]
+  appointment Appointment[]
 }
 
 model SpecialitiesOnDoctors {
@@ -61,12 +63,28 @@ model Patient {
   socialInsuranceId     Int
   createdAt             DateTime        @default(now())
   updatedAt             DateTime        @updatedAt
+  appointment           Appointment[]
 }
 
 model SocialInsurance {
-  id      Int       @id @default(autoincrement())
-  name    String    @unique
-  patient Patient[]
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  patient   Patient[]
+}
+
+model Appointment {
+  id           Int        @id @default(autoincrement())
+  date         DateTime   @default(now())
+  patient      Patient    @relation(fields: [patientId], references: [id])
+  patientId    Int
+  doctor       User       @relation(fields: [doctorId], references: [id])
+  doctorId     Int
+  speciality   Speciality @relation(fields: [specialityId], references: [id])
+  specialityId Int
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 enum Role {
