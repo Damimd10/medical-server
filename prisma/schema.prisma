@@ -87,6 +87,19 @@ model Appointment {
   updatedAt    DateTime   @updatedAt
 }
 
+model Field {
+  id              Int      @id @default(autoincrement())
+  fieldId         String
+  inputType       String
+  label           String
+  defaultValue    String?
+  alternativeName String[]
+  fullName        String
+  rightLabel      String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
 enum Role {
   ADMIN
   DOCTOR

@@ -11,6 +11,7 @@ import { SpecialitiesModule } from './specialities/specialities.module';
 import { UsersModule } from './users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AppointmentsModule } from './appointments/appointments.module';
+import { FieldsModule } from './fields/fields.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AppointmentsModule } from './appointments/appointments.module';
     HealthModule,
     PrismaModule,
     AppointmentsModule,
+    FieldsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
