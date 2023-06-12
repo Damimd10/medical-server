@@ -75,29 +75,43 @@ model SocialInsurance {
 }
 
 model Appointment {
-  id           Int        @id @default(autoincrement())
-  date         DateTime   @default(now())
-  patient      Patient    @relation(fields: [patientId], references: [id])
-  patientId    Int
-  doctor       User       @relation(fields: [doctorId], references: [id])
-  doctorId     Int
-  speciality   Speciality @relation(fields: [specialityId], references: [id])
-  specialityId Int
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id               Int                @id @default(autoincrement())
+  date             DateTime           @default(now())
+  patient          Patient            @relation(fields: [patientId], references: [id])
+  patientId        Int
+  doctor           User               @relation(fields: [doctorId], references: [id])
+  doctorId         Int
+  speciality       Speciality         @relation(fields: [specialityId], references: [id])
+  specialityId     Int
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  appointmentField AppointmentField[]
 }
 
 model Field {
-  id              Int      @id @default(autoincrement())
-  fieldId         String
-  inputType       String
-  label           String
-  defaultValue    String?
-  alternativeName String[]
-  fullName        String
-  rightLabel      String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id               Int                @id @default(autoincrement())
+  fieldId          String
+  inputType        String
+  label            String
+  defaultValue     String?
+  alternativeName  String[]
+  fullName         String
+  rightLabel       String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  appointmentField AppointmentField[]
+}
+
+model AppointmentField {
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  appointmentId Int
+  field         Field       @relation(fields: [fieldId], references: [id])
+  fieldId       Int
+  value         String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@id([appointmentId, fieldId])
 }
 
 enum Role {

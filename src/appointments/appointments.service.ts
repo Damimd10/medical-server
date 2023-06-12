@@ -3,12 +3,47 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 import { Appointment } from '@prisma/client';
+
+import { AttachFieldDto } from './dto/attach-field.dto';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 
 @Injectable()
 export class AppointmentsService {
   constructor(private prisma: PrismaService) {}
+
+  async attachField(attachFieldDto: AttachFieldDto) {
+    return this.prisma.appointmentField.create({
+      data: {
+        appointmentId: attachFieldDto.appointmentId,
+        fieldId: attachFieldDto.fieldId,
+        value: attachFieldDto.value,
+      },
+    });
+  }
+
+  async updateAttachedField(id: number, data: AttachFieldDto) {
+    return this.prisma.appointment.update({
+      where: {
+        id,
+      },
+      data: {
+        appointmentField: {
+          update: {
+            where: {
+              appointmentId_fieldId: {
+                appointmentId: data.appointmentId,
+                fieldId: data.fieldId,
+              },
+            },
+            data: {
+              value: data.value,
+            },
+          },
+        },
+      },
+    });
+  }
 
   async create(
     createAppointmentDto: CreateAppointmentDto,

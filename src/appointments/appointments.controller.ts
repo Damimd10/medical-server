@@ -7,12 +7,18 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { Appointment } from '@prisma/client';
+
+import { AccessTokenGuard } from 'src/auth/guards';
+
 import { AppointmentsService } from './appointments.service';
+import { AttachFieldDto } from './dto/attach-field.dto';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 
+@UseGuards(AccessTokenGuard)
 @Controller('appointments')
 export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) {}
@@ -22,6 +28,19 @@ export class AppointmentsController {
     @Body() createAppointmentDto: CreateAppointmentDto,
   ): Promise<Appointment> {
     return this.appointmentsService.create(createAppointmentDto);
+  }
+
+  @Post('/attach-field')
+  async attachField(@Body() attachFieldDto: AttachFieldDto) {
+    return this.appointmentsService.attachField(attachFieldDto);
+  }
+
+  @Patch('/:id/update-attached-field')
+  async updateAttachedField(
+    @Param('id') id: string,
+    @Body() attachFieldDto: AttachFieldDto,
+  ) {
+    return this.appointmentsService.updateAttachedField(+id, attachFieldDto);
   }
 
   @Get()
