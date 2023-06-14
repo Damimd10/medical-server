@@ -33,6 +33,7 @@ model Speciality {
   updatedAt   DateTime                @updatedAt
   doctors     SpecialitiesOnDoctors[]
   appointment Appointment[]
+  Template    Template[]
 }
 
 model SpecialitiesOnDoctors {
@@ -112,6 +113,17 @@ model AppointmentField {
   updatedAt     DateTime    @updatedAt
 
   @@id([appointmentId, fieldId])
+}
+
+model Template {
+  id               Int        @id @default(autoincrement())
+  name             String     @unique
+  templateType     String
+  alternativeName  String[]
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  specialization   Speciality @relation(fields: [specializationId], references: [id])
+  specializationId Int
 }
 
 enum Role {
