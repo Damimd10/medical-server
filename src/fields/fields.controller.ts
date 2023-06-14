@@ -7,13 +7,17 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { Field } from '@prisma/client';
+
+import { AccessTokenGuard } from 'src/auth/guards';
 
 import { CreateFieldDto } from './dto/create-field.dto';
 import { UpdateFieldDto } from './dto/update-field.dto';
 import { FieldsService } from './fields.service';
 
+@UseGuards(AccessTokenGuard)
 @Controller('fields')
 export class FieldsController {
   constructor(private readonly fieldsService: FieldsService) {}

@@ -9,10 +9,11 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 
 import { AccessTokenGuard } from 'src/auth/guards';
 
+import { CreateTemplateDto } from './dto/create-template.dto';
+import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplatesService } from './templates.service';
 
 @UseGuards(AccessTokenGuard)
@@ -21,10 +22,8 @@ export class TemplatesController {
   constructor(private readonly templatesService: TemplatesService) {}
 
   @Post()
-  async create(
-    @Body() templateCreateInput: Prisma.TemplateUncheckedCreateInput,
-  ) {
-    return this.templatesService.create(templateCreateInput);
+  async create(@Body() createTemplateDto: CreateTemplateDto) {
+    return this.templatesService.create(createTemplateDto);
   }
 
   @Get()
@@ -46,7 +45,7 @@ export class TemplatesController {
   @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Body() templateUpdateInput: Prisma.TemplateUncheckedUpdateInput,
+    @Body() updateTemplateDto: UpdateTemplateDto,
   ) {
     const template = await this.templatesService.findOne(+id);
 
@@ -54,7 +53,7 @@ export class TemplatesController {
       throw new NotFoundException('Template not found');
     }
 
-    return this.templatesService.update(+id, templateUpdateInput);
+    return this.templatesService.update(+id, updateTemplateDto);
   }
 
   @Delete(':id')

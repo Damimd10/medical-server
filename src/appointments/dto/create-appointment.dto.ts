@@ -1,6 +1,19 @@
+import { IsDate, IsNotEmpty, IsNumber } from 'class-validator';
+
 export class CreateAppointmentDto {
-  date: any;
-  patientId: number;
+  @IsDate()
+  @IsNotEmpty()
+  date: string;
+
+  @IsNumber()
+  @IsNotEmpty()
   doctorId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  patientId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
   specialityId: number;
 }

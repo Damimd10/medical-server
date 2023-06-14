@@ -1,17 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Template } from '@prisma/client';
+import { Template } from '@prisma/client';
 
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateTemplateDto } from './dto/create-template.dto';
+import { UpdateTemplateDto } from './dto/update-template.dto';
 
 @Injectable()
 export class TemplatesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(
-    templateCreateInput: Prisma.TemplateUncheckedCreateInput,
-  ): Promise<Template> {
+  async create(createTemplateDto: CreateTemplateDto): Promise<Template> {
+    const { specializationId, ...createTemplateData } = createTemplateDto;
     return this.prisma.template.create({
-      data: templateCreateInput,
+      data: {
+        ...createTemplateData,
+        specialization: { connect: { id: specializationId } },
+      },
     });
   }
 
@@ -27,15 +31,17 @@ export class TemplatesService {
     return this.prisma.template.findUnique({ where: { id } });
   }
 
-  async update(
-    id: number,
-    templateUpdateInput: Prisma.TemplateUncheckedUpdateInput,
-  ) {
+  async update(id: number, updateTemplateDto: UpdateTemplateDto) {
+    const { specializationId, ...updateTemplateData } = updateTemplateDto;
+
     return this.prisma.template.update({
       where: {
         id,
       },
-      data: templateUpdateInput,
+      data: {
+        ...updateTemplateData,
+        specialization: { connect: { id: specializationId } },
+      },
     });
   }
 

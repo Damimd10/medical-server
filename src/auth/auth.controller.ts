@@ -2,6 +2,7 @@ import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { UserEntity } from 'src/users/entities/user.entity';
 
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto';
@@ -13,7 +14,7 @@ export class AuthController {
 
   @UseGuards(RefreshTokenGuard)
   @Post('refresh')
-  refreshTokens(@Req() req: Request) {
+  async refreshTokens(@Req() req: Request) {
     const userId = req.user['sub'];
     const refreshToken = req.user['refreshToken'];
 
@@ -21,18 +22,18 @@ export class AuthController {
   }
 
   @Post('signin')
-  signin(@Body() data: AuthDto) {
-    return this.authService.signIn(data);
+  async signin(@Body() data: AuthDto) {
+    return new UserEntity(await this.authService.signIn(data));
   }
 
   @Post('signup')
-  signup(@Body() createUserDto: CreateUserDto) {
-    return this.authService.signUp(createUserDto);
+  async signup(@Body() createUserDto: CreateUserDto) {
+    return new UserEntity(await this.authService.signUp(createUserDto));
   }
 
   @UseGuards(AccessTokenGuard)
   @Post('logout')
-  logout(@Req() req: Request) {
-    this.authService.logout(req.user['sub']);
+  async logout(@Req() req: Request) {
+    return this.authService.logout(req.user['sub']);
   }
 }
