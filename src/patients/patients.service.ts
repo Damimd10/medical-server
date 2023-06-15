@@ -57,8 +57,10 @@ export class PatientsService {
       },
       data: {
         ...patientData,
-        createdBy: { connect: { id: createdBy } },
-        socialInsurance: { connect: { id: socialInsuranceId } },
+        ...(createdBy && { createdBy: { connect: { id: createdBy } } }),
+        ...(socialInsuranceId && {
+          socialInsurance: { connect: { id: socialInsuranceId } },
+        }),
       },
     });
 
