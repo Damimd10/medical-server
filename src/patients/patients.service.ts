@@ -49,14 +49,23 @@ export class PatientsService {
     id: number,
     updatePatientDto: UpdatePatientDto,
   ): Promise<Patient> {
+    const { socialInsuranceId, createdBy, ...patientData } = updatePatientDto;
+
     await this.prisma.patient.update({
       where: {
         id,
       },
-      data: {} as any,
+      data: {
+        ...patientData,
+        createdBy: { connect: { id: createdBy } },
+        socialInsurance: { connect: { id: socialInsuranceId } },
+      },
     });
 
-    return this.prisma.patient.findUnique({ where: { id } });
+    return this.prisma.patient.findUnique({
+      include: { createdBy: true, socialInsurance: true },
+      where: { id },
+    });
   }
 
   async remove(id: number): Promise<void> {
