@@ -5,23 +5,28 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Length,
+  IsStrongPassword
 } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
+  @Length(8, 30)
   username: string;
 
   @IsString()
   @IsNotEmpty()
+  @Length(8, 30)
+  @IsStrongPassword()
   password: string;
 
   @IsString()
-  @IsOptional()
-  name?: string;
+  @IsNotEmpty()
+  name: string;
 
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   surname?: string;
 
   @IsEnum(['ADMIN', 'DOCTOR', 'PATIENT'])
@@ -29,5 +34,6 @@ export class CreateUserDto {
   role?: Role;
 
   @IsNumber({}, { each: true })
-  specialities: number[];
+  @IsOptional()
+  specialities?: number[];
 }
