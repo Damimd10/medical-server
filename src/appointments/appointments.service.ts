@@ -15,8 +15,8 @@ export class AppointmentsService {
   async attachField(attachFieldDto: AttachFieldDto) {
     return this.prisma.appointmentField.create({
       data: {
-        appointmentId: attachFieldDto.appointmentId,
-        fieldId: attachFieldDto.fieldId,
+        appointment_id: attachFieldDto.appointmentId,
+        field_id: attachFieldDto.fieldId,
         value: attachFieldDto.value,
       },
     });
@@ -28,12 +28,12 @@ export class AppointmentsService {
         id,
       },
       data: {
-        appointmentField: {
+        appointment_fields: {
           update: {
             where: {
-              appointmentId_fieldId: {
-                appointmentId: data.appointmentId,
-                fieldId: data.fieldId,
+              appointment_id_field_id: {
+                appointment_id: data.appointmentId,
+                field_id: data.fieldId,
               },
             },
             data: {

@@ -11,119 +11,149 @@ datasource db {
 }
 
 model User {
-  id           Int                     @id @default(autoincrement())
-  username     String                  @unique
-  password     String
-  name         String?
-  surname      String?
-  role         Role                    @default(USER)
-  refreshToken String?
-  createdAt    DateTime                @default(now())
-  updatedAt    DateTime                @updatedAt
-  specialities SpecialitiesOnDoctors[]
-  patients     Patient[]
-  appointment  Appointment[]
+  id            Int                     @id @default(autoincrement())
+  username      String                  @unique
+  password      String
+  name          String?
+  surname       String?
+  role          Role                    @default(USER)
+  refresh_token String?
+  created_at    DateTime                @default(now())
+  updated_at    DateTime                @updatedAt
+  specialities  SpecialitiesOnDoctors[]
+  patients      Patient[]
+  appointments  Appointment[]
+
+  @@map("users")
 }
 
 model Speciality {
-  id          Int                     @id @default(autoincrement())
-  name        String                  @unique
-  description String?
-  createdAt   DateTime                @default(now())
-  updatedAt   DateTime                @updatedAt
-  doctors     SpecialitiesOnDoctors[]
-  appointment Appointment[]
-  Template    Template[]
+  id           Int                     @id @default(autoincrement())
+  name         String                  @unique
+  description  String?
+  created_at   DateTime                @default(now())
+  updated_at   DateTime                @updatedAt
+  doctors      SpecialitiesOnDoctors[]
+  appointments Appointment[]
+  templates    Template[]
+
+  @@map("specialities")
 }
 
 model SpecialitiesOnDoctors {
-  user         User       @relation(fields: [userId], references: [id])
-  userId       Int
-  speciality   Speciality @relation(fields: [specialityId], references: [id])
-  specialityId Int
-  assignedAt   DateTime   @default(now())
+  user          User       @relation(fields: [user_id], references: [id])
+  user_id       Int
+  speciality    Speciality @relation(fields: [speciality_id], references: [id])
+  speciality_id Int
+  assignedAt    DateTime   @default(now())
 
-  @@id([userId, specialityId])
+  @@id([user_id, speciality_id])
+  @@map("specialities_on_doctors")
 }
 
 model Patient {
-  id                    Int             @id @default(autoincrement())
-  name                  String
-  surname               String
-  socialInsuranceNumber String?
-  birthDate             String?
-  phoneNumber           String?
-  isAlive               Boolean         @default(true)
-  email                 String?
-  country               String?
-  city                  String?
-  street                String?
-  createdBy             User            @relation(fields: [createdById], references: [id])
-  createdById           Int
-  socialInsurance       SocialInsurance @relation(fields: [socialInsuranceId], references: [id])
-  socialInsuranceId     Int
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  appointment           Appointment[]
+  id                      Int             @id @default(autoincrement())
+  name                    String
+  surname                 String
+  social_insurance_number String?
+  birth_date              String?
+  phone_number            String?
+  is_alive                Boolean         @default(true)
+  email                   String?
+  country                 String?
+  city                    String?
+  street                  String?
+  created_by              User            @relation(fields: [created_by_id], references: [id])
+  created_by_id           Int
+  social_insurance        SocialInsurance @relation(fields: [social_insurance_id], references: [id])
+  social_insurance_id     Int
+  created_at              DateTime        @default(now())
+  updated_at              DateTime        @updatedAt
+  appointments            Appointment[]
+
+  @@map("patients")
 }
 
 model SocialInsurance {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  patient   Patient[]
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  patients   Patient[]
+
+  @@map("social_insurances")
 }
 
 model Appointment {
-  id               Int                @id @default(autoincrement())
-  date             DateTime           @default(now())
-  patient          Patient            @relation(fields: [patientId], references: [id])
-  patientId        Int
-  doctor           User               @relation(fields: [doctorId], references: [id])
-  doctorId         Int
-  speciality       Speciality         @relation(fields: [specialityId], references: [id])
-  specialityId     Int
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  appointmentField AppointmentField[]
+  id                 Int                @id @default(autoincrement())
+  date               DateTime           @default(now())
+  patient            Patient            @relation(fields: [patient_id], references: [id])
+  patient_id         Int
+  doctor             User               @relation(fields: [doctor_id], references: [id])
+  doctor_id          Int
+  speciality         Speciality         @relation(fields: [speciality_id], references: [id])
+  speciality_id      Int
+  created_at         DateTime           @default(now())
+  updated_at         DateTime           @updatedAt
+  appointment_fields AppointmentField[]
+
+  @@map("appointments")
 }
 
 model Field {
-  id               Int                @id @default(autoincrement())
-  fieldId          String
-  inputType        String
-  label            String
-  defaultValue     String?
-  alternativeName  String[]
-  fullName         String
-  rightLabel       String?
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  appointmentField AppointmentField[]
+  id                  Int                 @id @default(autoincrement())
+  field_id            String
+  input_type          String
+  label               String
+  default_value       String?
+  alternative_name    String[]
+  full_name           String
+  right_label         String?
+  created_at          DateTime            @default(now())
+  updated_at          DateTime            @updatedAt
+  appointment_fields  AppointmentField[]
+  fields_on_templates FieldsOnTemplates[]
+
+  @@map("fields")
 }
 
 model AppointmentField {
-  appointment   Appointment @relation(fields: [appointmentId], references: [id])
-  appointmentId Int
-  field         Field       @relation(fields: [fieldId], references: [id])
-  fieldId       Int
-  value         String
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  appointment    Appointment @relation(fields: [appointment_id], references: [id])
+  appointment_id Int
+  field          Field       @relation(fields: [field_id], references: [id])
+  field_id       Int
+  value          String
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @updatedAt
 
-  @@id([appointmentId, fieldId])
+  @@id([appointment_id, field_id])
+  @@map("appointment_fields")
 }
 
 model Template {
-  id               Int        @id @default(autoincrement())
-  name             String     @unique
-  templateType     String
-  alternativeName  String[]
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
-  specialization   Speciality @relation(fields: [specializationId], references: [id])
-  specializationId Int
+  id                  Int                 @id @default(autoincrement())
+  name                String              @unique
+  template_type       String
+  alternative_name    String[]
+  created_at          DateTime            @default(now())
+  updated_at          DateTime            @updatedAt
+  specialization      Speciality          @relation(fields: [specialization_id], references: [id])
+  specialization_id   Int
+  fields_on_templates FieldsOnTemplates[]
+
+  @@map("templates")
+}
+
+model FieldsOnTemplates {
+  template    Template @relation(fields: [template_id], references: [id])
+  template_id Int
+  field       Field    @relation(fields: [field_id], references: [id])
+  field_id    Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@id([template_id, field_id])
+  @@map("fields_on_templates")
 }
 
 enum Role {

@@ -49,24 +49,24 @@ async function main() {
   await prisma.patient.createMany({
     data: [
       {
-        createdById: 1,
+        created_by_id: 1,
         name: 'Juan',
-        socialInsuranceNumber: '123456',
-        socialInsuranceId: 1,
+        social_insurance_number: '123456',
+        social_insurance_id: 1,
         surname: 'Perez',
       },
       {
-        createdById: 1,
+        created_by_id: 1,
         name: 'Pedro',
-        socialInsuranceNumber: '123456',
-        socialInsuranceId: 1,
+        social_insurance_number: '123456',
+        social_insurance_id: 1,
         surname: 'Gomez',
       },
       {
-        createdById: 1,
+        created_by_id: 1,
         name: 'Maria',
-        socialInsuranceNumber: '123456',
-        socialInsuranceId: 1,
+        social_insurance_number: '123456',
+        social_insurance_id: 1,
         surname: 'Gonzalez',
       },
     ],
@@ -75,20 +75,20 @@ async function main() {
   await prisma.field.createMany({
     data: [
       {
-        fieldId: 'enfermedadCoronaria',
-        inputType: 'checkbox',
+        field_id: 'enfermedadCoronaria',
+        input_type: 'checkbox',
         label: 'Enf. Coronaria',
-        fullName: 'Enfermedad Coronaria',
+        full_name: 'Enfermedad Coronaria',
       },
     ],
   });
 
   await prisma.appointment.create({
     data: {
-      doctorId: 1,
-      patientId: 1,
+      doctor_id: 1,
+      patient_id: 1,
       date: new Date(),
-      specialityId: 3,
+      speciality_id: 3,
     },
   });
 }
