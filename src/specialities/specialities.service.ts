@@ -11,7 +11,9 @@ export class SpecialitiesService {
   constructor(private prisma: PrismaService) {}
 
   async create(createSpecialityDto: CreateSpecialityDto): Promise<Speciality> {
-    return this.prisma.speciality.create({ data: { ...createSpecialityDto } });
+    return this.prisma.speciality.create({
+      data: { name: createSpecialityDto.name },
+    });
   }
 
   async findAll(): Promise<Speciality[]> {
@@ -28,7 +30,7 @@ export class SpecialitiesService {
   ): Promise<Speciality> {
     await this.prisma.speciality.update({
       where: { id },
-      data: { ...updateSpecialityDto },
+      data: { name: updateSpecialityDto.name },
     });
 
     return this.prisma.speciality.findUnique({ where: { id } });

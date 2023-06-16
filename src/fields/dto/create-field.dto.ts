@@ -10,6 +10,10 @@ export class CreateFieldDto {
   inputType: string;
 
   @IsString()
+  @IsOptional()
+  defaultValue?: string;
+
+  @IsString()
   @IsNotEmpty()
   label: string;
 

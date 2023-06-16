@@ -5,8 +5,8 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsStrongPassword,
   Length,
-  IsStrongPassword
 } from 'class-validator';
 
 export class CreateUserDto {

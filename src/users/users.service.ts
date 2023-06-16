@@ -43,7 +43,10 @@ export class UsersService {
 
     const user = await this.prisma.user.create({
       data: {
-        ...userData,
+        username: userData.username,
+        password: userData.password,
+        name: userData.name,
+        surname: userData.surname,
         role: Role.DOCTOR,
         specialities: {
           create: specialities.map((specialityId) => ({
@@ -68,10 +71,10 @@ export class UsersService {
       ? {
           specialities: {
             deleteMany: {
-              userId: id,
+              user_id: id,
             },
             create: specialities.map((specialityId) => ({
-              assignedAt: new Date(),
+              assigned_at: new Date(),
               speciality: {
                 connect: {
                   id: specialityId,
@@ -90,8 +93,11 @@ export class UsersService {
       },
       where: { id },
       data: {
+        username: userData.username,
+        password: userData.password,
+        name: userData.name,
+        surname: userData.surname,
         ...specialitiesData,
-        ...userData,
       },
     });
   }

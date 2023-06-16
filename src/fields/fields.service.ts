@@ -12,7 +12,15 @@ export class FieldsService {
 
   async create(createFieldDto: CreateFieldDto): Promise<Field> {
     return this.prisma.field.create({
-      data: createFieldDto,
+      data: {
+        field_id: createFieldDto.fieldId,
+        input_type: createFieldDto.inputType,
+        label: createFieldDto.label,
+        default_value: createFieldDto.defaultValue,
+        alternative_name: createFieldDto.alternativeName,
+        full_name: createFieldDto.fullName,
+        right_label: createFieldDto.rightLabel,
+      },
     });
   }
 
@@ -29,7 +37,15 @@ export class FieldsService {
       where: {
         id,
       },
-      data: updateFieldDto,
+      data: {
+        field_id: updateFieldDto.fieldId,
+        input_type: updateFieldDto.inputType,
+        label: updateFieldDto.label,
+        default_value: updateFieldDto.defaultValue,
+        alternative_name: updateFieldDto.alternativeName,
+        full_name: updateFieldDto.fullName,
+        right_label: updateFieldDto.rightLabel,
+      },
     });
   }
 

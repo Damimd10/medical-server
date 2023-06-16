@@ -105,7 +105,22 @@ export class AppointmentsService {
         id,
       },
       data: {
-        ...updateAppointmentDto,
+        date: updateAppointmentDto.date,
+        patient: {
+          connect: {
+            id: updateAppointmentDto.patientId,
+          },
+        },
+        doctor: {
+          connect: {
+            id: updateAppointmentDto.doctorId,
+          },
+        },
+        speciality: {
+          connect: {
+            id: updateAppointmentDto.specialityId,
+          },
+        },
       },
     });
   }

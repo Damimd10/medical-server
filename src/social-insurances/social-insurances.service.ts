@@ -14,7 +14,9 @@ export class SocialInsurancesService {
     createSocialInsuranceDto: CreateSocialInsuranceDto,
   ): Promise<SocialInsurance> {
     const newSocialInsurance = await this.prisma.socialInsurance.create({
-      data: { ...createSocialInsuranceDto },
+      data: {
+        name: createSocialInsuranceDto.name,
+      },
     });
 
     return newSocialInsurance;
@@ -34,7 +36,9 @@ export class SocialInsurancesService {
   ): Promise<SocialInsurance> {
     await this.prisma.socialInsurance.update({
       where: { id },
-      data: { ...updateSocialInsuranceDto },
+      data: {
+        name: updateSocialInsuranceDto.name,
+      },
     });
 
     return this.prisma.socialInsurance.findUnique({ where: { id } });

@@ -13,7 +13,9 @@ export class TemplatesService {
     const { specializationId, ...createTemplateData } = createTemplateDto;
     return this.prisma.template.create({
       data: {
-        ...createTemplateData,
+        name: createTemplateData.name,
+        template_type: createTemplateData.templateType,
+        alternative_name: createTemplateData.alternativeName,
         specialization: { connect: { id: specializationId } },
       },
     });
@@ -39,7 +41,9 @@ export class TemplatesService {
         id,
       },
       data: {
-        ...updateTemplateData,
+        name: updateTemplateData.name,
+        template_type: updateTemplateData.templateType,
+        alternative_name: updateTemplateData.alternativeName,
         specialization: { connect: { id: specializationId } },
       },
     });

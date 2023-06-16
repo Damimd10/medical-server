@@ -15,20 +15,20 @@ export class PatientsService {
     const patient = await this.prisma.patient.create({
       data: {
         ...patientData,
-        createdBy: {
+        created_by: {
           connect: {
             id: createdBy,
           },
         },
-        socialInsurance: {
+        social_insurance: {
           connect: {
             id: socialInsuranceId,
           },
         },
       },
       include: {
-        createdBy: true,
-        socialInsurance: true,
+        created_by: true,
+        social_insurance: true,
       },
     });
 
@@ -65,7 +65,7 @@ export class PatientsService {
     });
 
     return this.prisma.patient.findUnique({
-      include: { createdBy: true, socialInsurance: true },
+      include: { created_by: true, social_insurance: true },
       where: { id },
     });
   }
