@@ -14,8 +14,8 @@ export class CreateFieldDto {
   label: string;
 
   @IsString()
-  @IsNotEmpty()
-  alternativeName: string;
+  @IsOptional()
+  alternativeName?: string;
 
   @IsString()
   @IsNotEmpty()
