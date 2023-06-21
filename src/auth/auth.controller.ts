@@ -23,7 +23,7 @@ export class AuthController {
 
   @Post('signin')
   async signin(@Body() data: AuthDto) {
-    return new UserEntity(await this.authService.signIn(data));
+    return this.authService.signIn(data);
   }
 
   @Post('signup')

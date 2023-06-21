@@ -34,7 +34,7 @@ export class AuthService {
         },
         {
           secret: this.configService.get('JWT_ACCESS_TOKEN'),
-          expiresIn: '15m',
+          expiresIn: '1h',
         },
       ),
       this.jwtService.signAsync(
@@ -62,13 +62,13 @@ export class AuthService {
   async refreshTokens(userId: number, refreshToken: string) {
     const user = await this.usersService.findById(userId);
 
-    if (!user || !user.refreshToken) {
+    if (!user || !user.refresh_token) {
       throw new ForbiddenException('Access Denied');
     }
 
     const refreshTokenMatches = await bcrypt.compare(
       refreshToken,
-      user.refreshToken,
+      user.refresh_token,
     );
 
     if (!refreshTokenMatches) {

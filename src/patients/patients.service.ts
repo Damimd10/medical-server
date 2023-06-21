@@ -36,7 +36,11 @@ export class PatientsService {
   }
 
   async findAll(): Promise<Patient[]> {
-    return this.prisma.patient.findMany();
+    return this.prisma.patient.findMany({
+      include: {
+        social_insurance: true,
+      },
+    });
   }
 
   async findOne(id: number): Promise<Patient> {

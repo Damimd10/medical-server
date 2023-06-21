@@ -4,18 +4,18 @@ export class PatientEntity implements Patient {
   id: number;
   name: string;
   surname: string;
-  socialInsuranceNumber: string;
-  socialInsuranceId: number;
-  birthDate: string;
-  phoneNumber: string;
-  isAlive: boolean;
+  social_insurance_number: string;
+  social_insurance_id: number;
+  birth_date: string;
+  phone_number: string;
+  is_alive: boolean;
   email: string;
   country: string;
   city: string;
   street: string;
-  createdById: number;
-  createdAt: Date;
-  updatedAt: Date;
+  created_by_id: number;
+  created_at: Date;
+  updated_at: Date;
 
   constructor(partial: Partial<PatientEntity>) {
     Object.assign(this, partial);

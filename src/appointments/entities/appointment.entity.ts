@@ -6,14 +6,14 @@ import { UserEntity } from 'src/users/entities/user.entity';
 export class AppointmentEntity implements Appointment {
   id: number;
   date: Date;
-  patientId: number;
+  patient_id: number;
   patient: PatientEntity;
-  doctorId: number;
+  doctor_id: number;
   doctor: UserEntity;
-  specialityId: number;
+  speciality_id: number;
   speciality: SpecialityEntity;
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: Date;
+  updated_at: Date;
 
   constructor(partial: Partial<AppointmentEntity>) {
     Object.assign(this, partial);

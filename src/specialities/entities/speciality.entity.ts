@@ -4,8 +4,8 @@ export class SpecialityEntity implements Speciality {
   id: number;
   name: string;
   description: string;
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: Date;
+  updated_at: Date;
 
   constructor(partial: Partial<SpecialityEntity>) {
     Object.assign(this, partial);

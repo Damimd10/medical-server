@@ -7,9 +7,9 @@ export class UserEntity implements User {
   name: string;
   surname: string;
   role: Role;
-  refreshToken: string;
-  createdAt: Date;
-  updatedAt: Date;
+  refresh_token: string;
+  created_at: Date;
+  updated_at: Date;
 
   constructor(partial: Partial<UserEntity>) {
     Object.assign(this, partial);
