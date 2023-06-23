@@ -45,6 +45,9 @@ export class PatientsService {
 
   async findOne(id: number): Promise<Patient> {
     return this.prisma.patient.findUnique({
+      include: {
+        social_insurance: true,
+      },
       where: { id },
     });
   }
