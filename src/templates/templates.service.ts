@@ -2,12 +2,24 @@ import { Injectable } from '@nestjs/common';
 import { Template } from '@prisma/client';
 
 import { PrismaService } from 'src/prisma/prisma.service';
+import { AttachFieldDto } from './dto/attach-field.dto';
 import { CreateTemplateDto } from './dto/create-template.dto';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 
 @Injectable()
 export class TemplatesService {
   constructor(private readonly prisma: PrismaService) {}
+
+  async attachField(attachFieldDto: AttachFieldDto): Promise<any> {
+    const { templateId, fieldId } = attachFieldDto;
+
+    return this.prisma.fieldsOnTemplates.create({
+      data: {
+        field_id: fieldId,
+        template_id: templateId,
+      },
+    });
+  }
 
   async create(createTemplateDto: CreateTemplateDto): Promise<Template> {
     const { specializationId, ...createTemplateData } = createTemplateDto;
@@ -22,11 +34,18 @@ export class TemplatesService {
   }
 
   async findAll(): Promise<Template[]> {
-    return this.prisma.template.findMany({
+    const templates = await this.prisma.template.findMany({
       include: {
+        fields_on_templates: {
+          include: {
+            field: true,
+          },
+        },
         specialization: true,
       },
     });
+
+    return templates;
   }
 
   async findOne(id: number): Promise<Template> {

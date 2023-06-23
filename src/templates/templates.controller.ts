@@ -12,6 +12,7 @@ import {
 
 import { AccessTokenGuard } from 'src/auth/guards';
 
+import { AttachFieldDto } from './dto/attach-field.dto';
 import { CreateTemplateDto } from './dto/create-template.dto';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplatesService } from './templates.service';
@@ -20,6 +21,11 @@ import { TemplatesService } from './templates.service';
 @Controller('templates')
 export class TemplatesController {
   constructor(private readonly templatesService: TemplatesService) {}
+
+  @Post('/attach-field')
+  async attachField(@Body() attachFieldDto: AttachFieldDto) {
+    return this.templatesService.attachField(attachFieldDto);
+  }
 
   @Post()
   async create(@Body() createTemplateDto: CreateTemplateDto) {
