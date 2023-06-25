@@ -89,6 +89,11 @@ export class AppointmentsService {
     return this.prisma.appointment.findUnique({
       where: { id },
       include: {
+        appointment_fields: {
+          include: {
+            field: true,
+          },
+        },
         doctor: true,
         patient: true,
         speciality: true,
