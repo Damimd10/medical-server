@@ -19,6 +19,7 @@ import { AttachTemplateDto } from './dto/attach-template.dto';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { UpdateFieldDto } from './dto/update-fields-dto';
+import { UpdateTemplateDto } from './dto/update-template.dto';
 
 @UseGuards(AccessTokenGuard)
 @Controller('appointments')
@@ -72,6 +73,14 @@ export class AppointmentsController {
     @Body() updateAppointmentDto: UpdateAppointmentDto,
   ): Promise<Appointment> {
     return this.appointmentsService.update(+id, updateAppointmentDto);
+  }
+
+  @Post(':id/templates')
+  async updateTemplates(
+    @Param('id') id: string,
+    @Body() templates: UpdateTemplateDto[],
+  ) {
+    return this.appointmentsService.updateTemplates(+id, templates);
   }
 
   @Post(':id/fields')

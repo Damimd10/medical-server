@@ -9,6 +9,7 @@ import { AttachTemplateDto } from './dto/attach-template.dto';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { UpdateFieldDto } from './dto/update-fields-dto';
+import { UpdateTemplateDto } from './dto/update-template.dto';
 
 @Injectable()
 export class AppointmentsService {
@@ -134,6 +135,30 @@ export class AppointmentsService {
             appointment_id: id,
             field_id: field.fieldId,
             value: field.value,
+          },
+        }),
+      ),
+    );
+
+    return collection;
+  }
+
+  async updateTemplates(id: number, templates: UpdateTemplateDto[]) {
+    const collection = await this.prisma.$transaction(
+      templates.map((template) =>
+        this.prisma.appointmentTemplate.upsert({
+          where: {
+            appointment_id_template_id: {
+              appointment_id: id,
+              template_id: template.templateId,
+            },
+          },
+          update: {
+            template_id: template.templateId,
+          },
+          create: {
+            appointment_id: id,
+            template_id: template.templateId,
           },
         }),
       ),
