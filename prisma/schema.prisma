@@ -85,17 +85,18 @@ model SocialInsurance {
 }
 
 model Appointment {
-  id                 Int                @id @default(autoincrement())
-  date               DateTime           @default(now())
-  patient            Patient            @relation(fields: [patient_id], references: [id])
-  patient_id         Int
-  doctor             User               @relation(fields: [doctor_id], references: [id])
-  doctor_id          Int
-  speciality         Speciality         @relation(fields: [speciality_id], references: [id])
-  speciality_id      Int
-  created_at         DateTime           @default(now())
-  updated_at         DateTime           @updatedAt
-  appointment_fields AppointmentField[]
+  id                    Int                   @id @default(autoincrement())
+  date                  DateTime              @default(now())
+  patient               Patient               @relation(fields: [patient_id], references: [id])
+  patient_id            Int
+  doctor                User                  @relation(fields: [doctor_id], references: [id])
+  doctor_id             Int
+  speciality            Speciality            @relation(fields: [speciality_id], references: [id])
+  speciality_id         Int
+  created_at            DateTime              @default(now())
+  updated_at            DateTime              @updatedAt
+  appointment_fields    AppointmentField[]
+  appointment_templates AppointmentTemplate[]
 
   @@map("appointments")
 }
@@ -117,6 +118,18 @@ model Field {
   @@map("fields")
 }
 
+model AppointmentTemplate {
+  appointment    Appointment @relation(fields: [appointment_id], references: [id])
+  appointment_id Int
+  template       Template    @relation(fields: [template_id], references: [id])
+  template_id    Int
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @updatedAt
+
+  @@id([appointment_id, template_id])
+  @@map("appointment_templates")
+}
+
 model AppointmentField {
   appointment    Appointment @relation(fields: [appointment_id], references: [id])
   appointment_id Int
@@ -131,15 +144,16 @@ model AppointmentField {
 }
 
 model Template {
-  id                  Int                 @id @default(autoincrement())
-  name                String              @unique
+  id                  Int                   @id @default(autoincrement())
+  name                String                @unique
   template_type       String
   alternative_name    String[]
-  created_at          DateTime            @default(now())
-  updated_at          DateTime            @updatedAt
-  specialization      Speciality          @relation(fields: [specialization_id], references: [id])
+  created_at          DateTime              @default(now())
+  updated_at          DateTime              @updatedAt
+  specialization      Speciality            @relation(fields: [specialization_id], references: [id])
   specialization_id   Int
   fields_on_templates FieldsOnTemplates[]
+  AppointmentTemplate AppointmentTemplate[]
 
   @@map("templates")
 }
