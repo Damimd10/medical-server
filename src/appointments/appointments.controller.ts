@@ -15,8 +15,11 @@ import { AccessTokenGuard } from 'src/auth/guards';
 
 import { AppointmentsService } from './appointments.service';
 import { AttachFieldDto } from './dto/attach-field.dto';
+import { AttachTemplateDto } from './dto/attach-template.dto';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
+import { UpdateFieldDto } from './dto/update-fields-dto';
+import { UpdateTemplateDto } from './dto/update-template.dto';
 
 @UseGuards(AccessTokenGuard)
 @Controller('appointments')
@@ -33,6 +36,11 @@ export class AppointmentsController {
   @Post('/attach-field')
   async attachField(@Body() attachFieldDto: AttachFieldDto) {
     return this.appointmentsService.attachField(attachFieldDto);
+  }
+
+  @Post('/attach-template')
+  async attachTemplate(@Body() attachTemplateDto: AttachTemplateDto) {
+    return this.appointmentsService.attachTemplate(attachTemplateDto);
   }
 
   @Patch('/:id/update-attached-field')
@@ -65,6 +73,22 @@ export class AppointmentsController {
     @Body() updateAppointmentDto: UpdateAppointmentDto,
   ): Promise<Appointment> {
     return this.appointmentsService.update(+id, updateAppointmentDto);
+  }
+
+  @Post(':id/templates')
+  async updateTemplates(
+    @Param('id') id: string,
+    @Body() templates: UpdateTemplateDto[],
+  ) {
+    return this.appointmentsService.updateTemplates(+id, templates);
+  }
+
+  @Post(':id/fields')
+  async updateFields(
+    @Param('id') id: string,
+    @Body() fields: UpdateFieldDto[],
+  ) {
+    return this.appointmentsService.updateFields(+id, fields);
   }
 
   @Delete(':id')

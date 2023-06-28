@@ -104,6 +104,7 @@ model Appointment {
   created_at         DateTime           @default(now())
   updated_at         DateTime           @updatedAt
   appointment_fields AppointmentField[]
+  appointment_templates AppointmentTemplate[]
 
   @@map("appointments")
 }
@@ -150,7 +151,9 @@ model Template {
   specialization      Speciality          @relation(fields: [specialization_id], references: [id])
   specialization_id   Int
   fields_on_templates FieldsOnTemplates[]
+  AppointmentTemplate AppointmentTemplate[]
   organizations_using_template Organization[]
+
 
   @@map("templates")
 }
