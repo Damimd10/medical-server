@@ -23,12 +23,14 @@ model User {
   specialities  SpecialitiesOnDoctors[]
   patients      Patient[]
   appointments  Appointment[]
-
+  organization_member Organization[] @relation("organization_members")
+  organization_admin Organization? @relation(fields: [organization_admin_id], references: [id])
+  organization_admin_id Int?
   @@map("users")
 }
 
 model Speciality {
-  id           Int                     @id @default(autoincrement())
+  id            Int                     @id @default(autoincrement())
   name         String                  @unique
   description  String?
   created_at   DateTime                @default(now())
@@ -52,10 +54,11 @@ model SpecialitiesOnDoctors {
 }
 
 model Patient {
-  id                      Int             @id @default(autoincrement())
+  id            Int                     @id @default(autoincrement())
   name                    String
   surname                 String
   social_insurance_number String?
+  clinical_history        String? 
   birth_date              String?
   phone_number            String?
   is_alive                Boolean         @default(true)
@@ -70,12 +73,14 @@ model Patient {
   created_at              DateTime        @default(now())
   updated_at              DateTime        @updatedAt
   appointments            Appointment[]
+  organization Organization @relation(fields: [organization_id], references: [id])
+  organization_id Int
 
   @@map("patients")
 }
 
 model SocialInsurance {
-  id         Int       @id @default(autoincrement())
+  id         Int                     @id @default(autoincrement())
   name       String    @unique
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
@@ -85,7 +90,7 @@ model SocialInsurance {
 }
 
 model Appointment {
-  id                 Int                @id @default(autoincrement())
+  id            Int                     @id @default(autoincrement())
   date               DateTime           @default(now())
   patient            Patient            @relation(fields: [patient_id], references: [id])
   patient_id         Int
@@ -93,6 +98,9 @@ model Appointment {
   doctor_id          Int
   speciality         Speciality         @relation(fields: [speciality_id], references: [id])
   speciality_id      Int
+  organization       Organization @relation(fields: [organization_id], references: [id])
+  organization_id    Int
+  status             AppointmentStatus @default(PLANNED)
   created_at         DateTime           @default(now())
   updated_at         DateTime           @updatedAt
   appointment_fields AppointmentField[]
@@ -101,16 +109,18 @@ model Appointment {
 }
 
 model Field {
-  id                  Int                 @id @default(autoincrement())
-  field_id            String
+  id                  Int                     @id @default(autoincrement())
+  field_id            String                  
   input_type          String
   label               String
   default_value       String?
   alternative_name    String[]
-  full_name           String
+  full_name           String?
   right_label         String?
   created_at          DateTime            @default(now())
   updated_at          DateTime            @updatedAt
+  default_section     String?
+  choices String[]
   appointment_fields  AppointmentField[]
   fields_on_templates FieldsOnTemplates[]
 
@@ -131,15 +141,16 @@ model AppointmentField {
 }
 
 model Template {
-  id                  Int                 @id @default(autoincrement())
+  id                  Int                     @id @default(autoincrement())
   name                String              @unique
-  template_type       String
   alternative_name    String[]
+  description         String?
   created_at          DateTime            @default(now())
   updated_at          DateTime            @updatedAt
   specialization      Speciality          @relation(fields: [specialization_id], references: [id])
   specialization_id   Int
   fields_on_templates FieldsOnTemplates[]
+  organizations_using_template Organization[]
 
   @@map("templates")
 }
@@ -156,8 +167,29 @@ model FieldsOnTemplates {
   @@map("fields_on_templates")
 }
 
+model Organization {
+  id            Int                     @id @default(autoincrement())
+  name String @unique
+  created_at DateTime @default(now())
+  templates Template[]
+  users User[] @relation("organization_members")
+  admins User[]
+  patients Patient[]
+  appointments Appointment[]
+  
+  @@map("organizations")
+}
+
+
 enum Role {
   ADMIN
   DOCTOR
   USER
 }
+
+enum AppointmentStatus {
+  PLANNED
+  CANCELED
+  STARTED
+  FINISHED
+  }
