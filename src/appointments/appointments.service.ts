@@ -25,6 +25,17 @@ export class AppointmentsService {
     });
   }
 
+  async detachField(appointmentId: number, fields: number[]) {
+    return this.prisma.appointmentField.deleteMany({
+      where: {
+        appointment_id: appointmentId,
+        field_id: {
+          in: fields,
+        },
+      },
+    });
+  }
+
   async attachTemplate(attachTemplateDto: AttachTemplateDto) {
     return this.prisma.appointmentTemplate.create({
       data: {

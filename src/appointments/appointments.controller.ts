@@ -38,6 +38,11 @@ export class AppointmentsController {
     return this.appointmentsService.attachField(attachFieldDto);
   }
 
+  @Post('/:id/detach-field')
+  async detachField(@Param('id') id: string, @Body() fields: number[]) {
+    return this.appointmentsService.detachField(+id, fields);
+  }
+
   @Post('/attach-template')
   async attachTemplate(@Body() attachTemplateDto: AttachTemplateDto) {
     return this.appointmentsService.attachTemplate(attachTemplateDto);
