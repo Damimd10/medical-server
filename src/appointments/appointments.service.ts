@@ -73,7 +73,7 @@ export class AppointmentsService {
   ): Promise<Appointment> {
     return this.prisma.appointment.create({
       data: {
-        date: createAppointmentDto.date,
+        date: new Date(createAppointmentDto.date),
         patient: {
           connect: {
             id: createAppointmentDto.patientId,
@@ -87,6 +87,14 @@ export class AppointmentsService {
         speciality: {
           connect: {
             id: createAppointmentDto.specialityId,
+          },
+        },
+        appointment_fields: {
+          createMany: {
+            data: createAppointmentDto.fields.map((field) => ({
+              field_id: field.fieldId,
+              value: field.value,
+            })),
           },
         },
       },

@@ -1,9 +1,8 @@
-import { IsDate, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateAppointmentDto {
-  @IsDate()
   @IsNotEmpty()
-  date: string;
+  date: any;
 
   @IsNumber()
   @IsNotEmpty()
@@ -16,4 +15,8 @@ export class CreateAppointmentDto {
   @IsNumber()
   @IsNotEmpty()
   specialityId: number;
+
+  @IsArray()
+  @IsNotEmpty()
+  fields: { fieldId: number; value: string }[];
 }
