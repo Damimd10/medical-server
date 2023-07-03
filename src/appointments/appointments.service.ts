@@ -89,6 +89,11 @@ export class AppointmentsService {
             id: createAppointmentDto.specialityId,
           },
         },
+        organization: {
+          connect: {
+            id: createAppointmentDto.organizationId,
+          },
+        },
         appointment_fields: {
           createMany: {
             data: createAppointmentDto.fields.map((field) => ({

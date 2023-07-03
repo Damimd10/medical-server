@@ -8,6 +8,7 @@ export class TemplateEntity implements Template {
   created_at: Date;
   updated_at: Date;
   specialization_id: number;
+  description: string;
 
   constructor(partial: Partial<TemplateEntity>) {
     Object.assign(this, partial);

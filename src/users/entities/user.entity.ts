@@ -10,6 +10,8 @@ export class UserEntity implements User {
   refresh_token: string;
   created_at: Date;
   updated_at: Date;
+  organization_id: number;
+  organization_admin_id: number;
 
   constructor(partial: Partial<UserEntity>) {
     Object.assign(this, partial);

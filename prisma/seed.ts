@@ -10,16 +10,22 @@ async function main() {
       {
         username: 'damian',
         password: hash,
+        name: 'Damian',
+        surname: 'Diaz',
         role: 'DOCTOR',
       },
       {
         username: 'lucas',
         password: hash,
+        name: 'Lucas',
+        surname: 'Muller',
         role: 'DOCTOR',
       },
       {
         username: 'maria',
         password: hash,
+        name: 'Maria',
+        surname: 'Becerra',
         role: 'DOCTOR',
       },
     ],
@@ -83,7 +89,7 @@ async function main() {
     ],
   });
 
-  await prisma.field.createMany({
+  const fields = await prisma.field.createMany({
     data: [
       {
         field_id: 'AntecEnfermedadCoronaria',
@@ -367,7 +373,7 @@ async function main() {
     ],
   });
 
-  await prisma.appointment.create({
+  const appointment = await prisma.appointment.create({
     data: {
       doctor_id: 1,
       patient_id: 1,
@@ -375,6 +381,21 @@ async function main() {
       speciality_id: 3,
       organization_id: 1,
     },
+  });
+
+  await prisma.appointmentField.createMany({
+    data: [
+      {
+        appointment_id: appointment.id,
+        field_id: fields[0].id,
+        value: 'true',
+      },
+      {
+        appointment_id: appointment.id,
+        field_id: fields[1].id,
+        value: 'true',
+      },
+    ],
   });
 }
 

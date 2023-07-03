@@ -55,4 +55,11 @@ export class CreatePatientDto {
   @IsNumber()
   @IsNotEmpty()
   createdBy: number;
+
+  @IsString()
+  clinicalHistory?: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  organizationId: number;
 }

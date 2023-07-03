@@ -16,6 +16,10 @@ export class CreateAppointmentDto {
   @IsNotEmpty()
   specialityId: number;
 
+  @IsNumber()
+  @IsNotEmpty()
+  organizationId: number;
+
   @IsArray()
   @IsNotEmpty()
   fields: { fieldId: number; value: string }[];

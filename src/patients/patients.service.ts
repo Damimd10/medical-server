@@ -10,7 +10,13 @@ export class PatientsService {
   constructor(private prisma: PrismaService) {}
 
   async create(createPatientDto: CreatePatientDto): Promise<Patient> {
-    const { socialInsuranceId, createdBy, ...patientData } = createPatientDto;
+    const {
+      organizationId,
+      clinicalHistory,
+      socialInsuranceId,
+      createdBy,
+      ...patientData
+    } = createPatientDto;
 
     const patient = await this.prisma.patient.create({
       data: {
@@ -23,6 +29,11 @@ export class PatientsService {
         social_insurance: {
           connect: {
             id: socialInsuranceId,
+          },
+        },
+        organization: {
+          connect: {
+            id: organizationId,
           },
         },
       },

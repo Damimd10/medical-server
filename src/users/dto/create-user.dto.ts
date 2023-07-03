@@ -36,4 +36,12 @@ export class CreateUserDto {
   @IsNumber({}, { each: true })
   @IsOptional()
   specialities?: number[];
+
+  @IsNumber()
+  @IsNotEmpty()
+  organization_member: number[];
+
+  @IsNumber()
+  @IsOptional()
+  organization_admin_id?: number;
 }

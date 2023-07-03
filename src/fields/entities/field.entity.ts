@@ -11,6 +11,8 @@ export class FieldEntity implements Field {
   right_label: string;
   created_at: Date;
   updated_at: Date;
+  choices: string[];
+  default_section: string;
 
   constructor(partial: Partial<FieldEntity>) {
     Object.assign(this, partial);

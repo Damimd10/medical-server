@@ -5,10 +5,6 @@ export class CreateTemplateDto {
   @IsNotEmpty()
   name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  templateType: string;
-
   @IsArray()
   @IsString({ each: true })
   @IsNotEmpty()
@@ -17,4 +13,7 @@ export class CreateTemplateDto {
   @IsNumber()
   @IsNotEmpty()
   specializationId: never;
+
+  @IsString()
+  description: string;
 }
