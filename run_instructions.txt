@@ -1,0 +1,8 @@
+- Set .env DATABASE_URL="postgresql://postgres:postgres@localhost:5432/medical-app"
+- Run docker-compose up -d
+- Run docker-compose down
+- Set .env DATABASE_URL="postgresql://postgres:postgres@db:5432/medical-app"
+- Run docker-compose up -d
+- In docker API image terminal, run: npx prisma migrate dev 
+---- if: "db error: ERROR: template database "template1" has a collation version mismatch" run in postgres: "ALTER DATABASE template1 REFRESH COLLATION VERSION" and try again
+- Then run: npx prisma seed db
