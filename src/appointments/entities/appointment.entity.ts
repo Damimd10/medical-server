@@ -1,8 +1,8 @@
 import { Appointment, AppointmentStatus } from '@prisma/client';
+import { OrganizationEntity } from 'src/organizations/entities/organization.entity';
 import { PatientEntity } from 'src/patients/entities/patient.entity';
 import { SpecialityEntity } from 'src/specialities/entities/speciality.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { OrganizationEntity } from 'src/organizations/entities/organization.entity';
 
 export class AppointmentEntity implements Appointment {
   id: number;
