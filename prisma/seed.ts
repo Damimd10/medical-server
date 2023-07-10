@@ -387,12 +387,12 @@ async function main() {
     data: [
       {
         appointment_id: appointment.id,
-        field_id: fields[0].id,
+        field_id: 1,
         value: 'true',
       },
       {
         appointment_id: appointment.id,
-        field_id: fields[1].id,
+        field_id: 2,
         value: 'true',
       },
     ],
